@@ -29,13 +29,13 @@
       version: nightly
 
   - name: Build neovim
-    become: false
+    become: true
     shell: "cd {{ lookup('env', 'PWD') }}/neovim && make -j 20 CMAKE_BUILD_TYPE=RelWithDebInfo"
     tags:
       - neovim
 
   - name: Install neovim
-    become: false
+    become: true
     shell: "cd {{ lookup('env', 'PWD') }}/neovim && make install"
     tags:
       - neovim
