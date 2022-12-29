@@ -1,0 +1,40 @@
+---
+- hosts: localhost
+  connection: local
+  become: true
+
+  tasks:
+  - name: Install build prerequisites
+    package: 
+      name: 
+         - ninja-build 
+         - gettext 
+         - libtool 
+         - libtool-bin 
+         - autoconf 
+         - automake 
+         - cmake 
+         - g++ 
+         - pkg-config 
+         - unzip 
+         - curl 
+         - doxygen
+      state: latest
+       
+  - name: Git clone the neovim 
+    ansible.builtin.git:
+      repo: 'https://github.com/neovim/neovim.git'
+      dest: "{{ lookup('env', 'HOME') }}/neovim"
+      version: nightly
+
+  - name: Build neovim
+    shell: "cd {{ lookup('env', 'HOME') }}/neovim && make -j 20 CMAKE_BUILD_TYPE=RelWithDebInfo"
+    tags:
+      - neovim
+
+  - name: Install neovim
+    become: true
+    shell: "cd {{ lookup('env', 'HOME') }}/neovim && make install"
+    tags:
+      - neovim
+          
