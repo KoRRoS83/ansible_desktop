@@ -1,6 +1,8 @@
 ---
 - hosts: localhost
   connection: local
+  vars:
+    my_home_dir: "/home/korros"
 
   tasks:
   - name: Install build prerequisites
@@ -25,25 +27,25 @@
     become: false
     ansible.builtin.git:
       repo: 'https://github.com/neovim/neovim.git'
-      dest: "{{ lookup('env', 'PWD') }}/neovim"
+      dest: "{{ my_home_dir }}/neovim"
       version: nightly
 
   - name: Build neovim
     become: true
-    shell: "cd {{ lookup('env', 'PWD') }}/neovim && make -j 20 CMAKE_BUILD_TYPE=RelWithDebInfo"
+    shell: "cd {{ my_home_dir }}/neovim && make -j 20 CMAKE_BUILD_TYPE=RelWithDebInfo"
     tags:
       - neovim
 
   - name: Install neovim
     become: true
-    shell: "cd {{ lookup('env', 'PWD') }}/neovim && make install"
+    shell: "cd {{ my_home_dir }}/neovim && make install"
     tags:
       - neovim
 
   - name: Create config directory for nvim
     become: false
     ansible.builtin.file:
-      path: "{{ lookup('env', 'PWD') }}/.config/nvim"
+      path: "{{ my_home_dir }}/.config/nvim"
       state: directory
       owner: korros
       group: korros
@@ -53,13 +55,13 @@
     become: false
     ansible.builtin.git:
       repo: 'https://github.com/nvim-lua/kickstart.nvim.git'
-      dest: "{{ lookup('env', 'PWD') }}/kickstart.nvim"
+      dest: "{{ my_home_dir }}/kickstart.nvim"
 
   - name: Copy kickstart.nvim init.lua to proper config directory
     become: false
     copy:
-      src: "{{ lookup('env', 'PWD') }}/kickstart.nvim/init.lua"
-      dest: "{{ lookup('env', 'PWD') }}/.config/nvim/init.lua"
+      src: "{{ my_home_dir }}/kickstart.nvim/init.lua"
+      dest: "{{ my_home_dir }}/.config/nvim/init.lua"
       owner: korros
       group: korros
       mode: '0775'
