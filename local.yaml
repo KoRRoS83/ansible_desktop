@@ -1,10 +1,10 @@
 ---
 - hosts: localhost
   connection: local
-  become: true
 
   tasks:
   - name: Install build prerequisites
+    become: true
     package: 
       name: 
          - ninja-build 
@@ -22,6 +22,7 @@
       state: latest
        
   - name: Git clone the neovim 
+    become: false
     ansible.builtin.git:
       repo: 'https://github.com/neovim/neovim.git'
       dest: "{{ lookup('env', 'HOME') }}/neovim"
