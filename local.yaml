@@ -37,4 +37,24 @@
     shell: "cd {{ lookup('env', 'HOME') }}/neovim && make install"
     tags:
       - neovim
-          
+
+  - name: Create config directory for nvim
+    ansible.builtin.file:
+      path: "{{ lookup('env', 'HOME') }}/config/nvim"
+      state: directory
+      owner: "{{ lookup('env', 'USR') }}"
+      group: "{{ lookup('env', 'USR') }}"
+      mode: '0775'
+
+   - name: Git clone the neovim kickstart
+     ansible.builtin.git:
+       repo: 'https://github.com/nvim-lua/kickstart.nvim.git'
+       dest: "{{ lookup('env', 'HOME') }}/kickstart.nvim"
+
+   - name: Copy kickstart.nvim init.lua to proper config directory
+     copy:
+       src: "{{ lookup('env', 'HOME') }}/kickstart.nvim/init.lua"
+       dest: "{{ lookup('env', 'HOME') }}/config/nvim/init.lua"
+       owner: "{{ lookup('env', 'USR') }}"
+       group: "{{ lookup('env', 'USR') }}"
+       mode: '0775'
