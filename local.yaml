@@ -29,17 +29,19 @@
       version: nightly
 
   - name: Build neovim
+    become: false
     shell: "cd {{ lookup('env', 'PWD') }}/neovim && make -j 20 CMAKE_BUILD_TYPE=RelWithDebInfo"
     tags:
       - neovim
 
   - name: Install neovim
-    become: true
+    become: false
     shell: "cd {{ lookup('env', 'PWD') }}/neovim && make install"
     tags:
       - neovim
 
   - name: Create config directory for nvim
+    become: false
     ansible.builtin.file:
       path: "{{ lookup('env', 'PWD') }}/.config/nvim"
       state: directory
@@ -48,11 +50,13 @@
       mode: '0775'
 
   - name: Git clone the neovim kickstart
+    become: false
     ansible.builtin.git:
       repo: 'https://github.com/nvim-lua/kickstart.nvim.git'
       dest: "{{ lookup('env', 'PWD') }}/kickstart.nvim"
 
   - name: Copy kickstart.nvim init.lua to proper config directory
+    become: false
     copy:
       src: "{{ lookup('env', 'PWD') }}/kickstart.nvim/init.lua"
       dest: "{{ lookup('env', 'PWD') }}/.config/nvim/init.lua"
