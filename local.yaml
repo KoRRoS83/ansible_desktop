@@ -65,3 +65,25 @@
       owner: korros
       group: korros
       mode: '0775'
+  
+  - name: Create admin user
+    user:
+      name: stark
+      comment: Stark Admin
+      password: "$6$MakingCo0lS@ltz$PixtIdE7Cw21mxk97FFNjoZDBvv5Cg8Hdh8Ba1A2Q2hqhiSUkTGtdiBhmSMh3j984q7sxckyz408UJOk3ygcF/"
+      system: yes
+
+  - name: Setup sudo for stark
+    copy:
+      src: files/sudoer_stark
+      dest: /etc/sudoers.d/stark
+      owner: root
+      group: root
+      mode: 0440
+
+  - name: Add ansible-pull cron job
+    cron:
+        name: Ansible auto-provision
+        user: stark
+        minute: "*/10"
+        job: ansible-pull -o -U https://github.com/KoRRoS83/ansible_desktop.git
