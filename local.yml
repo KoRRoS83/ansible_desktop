@@ -86,4 +86,4 @@
         name: Ansible auto-provision
         user: stark
         minute: "*/10"
-        job: ansible-pull -o -U https://github.com/KoRRoS83/ansible_desktop.git
+        job: ansible-pull -o -U https://github.com/KoRRoS83/ansible_desktop.git local.yml
