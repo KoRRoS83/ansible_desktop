@@ -70,7 +70,7 @@
     user:
       name: stark
       comment: Stark Admin
-      password: "$6$MakingCo0lS@ltz$PixtIdE7Cw21mxk97FFNjoZDBvv5Cg8Hdh8Ba1A2Q2hqhiSUkTGtdiBhmSMh3j984q7sxckyz408UJOk3ygcF/"
+      password: "$6$BYwUFStI.cTJYQT6$M9NK8pUt1xZ80.jhdb5WZ9fmGyvExT75sWSV5xsP8yyX1m6BscBjjjnUw5s7vj.NB6Qq/Nbu/K7Pd.PH8rPs40" 
       system: yes
 
   - name: Setup sudo for stark
