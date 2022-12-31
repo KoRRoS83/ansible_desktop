@@ -70,6 +70,7 @@
     user:
       name: stark
       comment: Stark Admin
+      shell: /bin/bash
       password: "$6$BYwUFStI.cTJYQT6$M9NK8pUt1xZ80.jhdb5WZ9fmGyvExT75sWSV5xsP8yyX1m6BscBjjjnUw5s7vj.NB6Qq/Nbu/K7Pd.PH8rPs40" 
       system: yes
 
