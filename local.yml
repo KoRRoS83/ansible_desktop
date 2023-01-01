@@ -4,6 +4,7 @@
   become: true
   vars:
     tmp_build: "/tmp/build"
+    my_home: "/home/korros"
 
   tasks:
   - name: Create config directory for nvim
@@ -47,7 +48,7 @@
 
   - name: Create config directory for nvim
     ansible.builtin.file:
-      path: "{{ tmp_build }}/.config/nvim"
+      path: "{{ my_home }}/.config/nvim"
       state: directory
       owner: korros
       group: korros
@@ -61,7 +62,7 @@
   - name: Copy kickstart.nvim init.lua to proper config directory
     copy:
       src: "{{ tmp_build }}/kickstart.nvim/init.lua"
-      dest: "{{ tmp_build }}/.config/nvim/init.lua"
+      dest: "{{ my_home }}/.config/nvim/init.lua"
       owner: korros
       group: korros
       mode: '0775'
