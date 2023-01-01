@@ -1,12 +1,18 @@
 ---
 - hosts: localhost
   connection: local
+  become: true
   vars:
-    my_home_dir: "/home/korros"
+    tmp_build: "/tmp/build"
 
   tasks:
+  - name: Create config directory for nvim
+    ansible.builtin.file:
+      path: "{{ tmp_build }}"
+      state: directory
+      mode: '0775'
+
   - name: Install build prerequisites
-    become: true
     package: 
       name: 
          - ninja-build 
@@ -24,67 +30,38 @@
       state: latest
        
   - name: Git clone the neovim 
-    become: false
     ansible.builtin.git:
       repo: 'https://github.com/neovim/neovim.git'
-      dest: "{{ my_home_dir }}/neovim"
+      dest: "{{ tmp_build }}/neovim"
       version: nightly
 
   - name: Build neovim
-    become: true
-    shell: "cd {{ my_home_dir }}/neovim && make -j 20 CMAKE_BUILD_TYPE=RelWithDebInfo"
+    shell: "cd {{ tmp_build }}/neovim && make -j 20 CMAKE_BUILD_TYPE=RelWithDebInfo"
     tags:
       - neovim
 
   - name: Install neovim
-    become: true
-    shell: "cd {{ my_home_dir }}/neovim && make install"
+    shell: "cd {{ tmp_build }}/neovim && make install"
     tags:
       - neovim
 
   - name: Create config directory for nvim
-    become: false
     ansible.builtin.file:
-      path: "{{ my_home_dir }}/.config/nvim"
+      path: "{{ tmp_build }}/.config/nvim"
       state: directory
       owner: korros
       group: korros
       mode: '0775'
 
   - name: Git clone the neovim kickstart
-    become: false
     ansible.builtin.git:
       repo: 'https://github.com/nvim-lua/kickstart.nvim.git'
-      dest: "{{ my_home_dir }}/kickstart.nvim"
+      dest: "{{ tmp_build }}/kickstart.nvim"
 
   - name: Copy kickstart.nvim init.lua to proper config directory
-    become: false
     copy:
-      src: "{{ my_home_dir }}/kickstart.nvim/init.lua"
-      dest: "{{ my_home_dir }}/.config/nvim/init.lua"
+      src: "{{ tmp_build }}/kickstart.nvim/init.lua"
+      dest: "{{ tmp_build }}/.config/nvim/init.lua"
       owner: korros
       group: korros
       mode: '0775'
-  
-  - name: Create admin user
-    user:
-      name: stark
-      comment: Stark Admin
-      shell: /bin/bash
-      password: "$6$BYwUFStI.cTJYQT6$M9NK8pUt1xZ80.jhdb5WZ9fmGyvExT75sWSV5xsP8yyX1m6BscBjjjnUw5s7vj.NB6Qq/Nbu/K7Pd.PH8rPs40" 
-      system: yes
-
-  - name: Setup sudo for stark
-    copy:
-      src: files/sudoer_stark
-      dest: /etc/sudoers.d/stark
-      owner: root
-      group: root
-      mode: 0440
-
-  - name: Add ansible-pull cron job
-    cron:
-        name: Ansible auto-provision
-        user: stark
-        minute: "*/10"
-        job: ansible-pull -o -U https://github.com/KoRRoS83/ansible_desktop.git local.yml

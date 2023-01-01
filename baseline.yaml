@@ -1,0 +1,27 @@
+---
+- hosts: localhost
+  connection: local
+
+  tasks:
+  - name: Create admin user
+    user:
+      name: stark
+      comment: Stark Admin
+      shell: /bin/bash
+      password: "$6$BYwUFStI.cTJYQT6$M9NK8pUt1xZ80.jhdb5WZ9fmGyvExT75sWSV5xsP8yyX1m6BscBjjjnUw5s7vj.NB6Qq/Nbu/K7Pd.PH8rPs40" 
+      system: yes
+
+  - name: Setup sudo for stark
+    copy:
+      src: files/sudoer_stark
+      dest: /etc/sudoers.d/stark
+      owner: root
+      group: root
+      mode: 0440
+
+  - name: Add ansible-pull cron job
+    cron:
+        name: Ansible auto-provision
+        user: stark
+        minute: "*/10"
+        job: ansible-pull -o -U https://github.com/KoRRoS83/ansible_desktop.git baseline.yaml
