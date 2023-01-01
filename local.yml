@@ -61,7 +61,7 @@
 
   - name: "Add nodejs 19.x ppa for apt repo"
     apt_repository:
-      repo: deb https://deb.nodesource.com/node_19.x jammy main
+      repo: deb https://deb.nodesource.com/node_19.x/ jammy main
       update_cache: yes
 
   - name: Install kickstart lsp requirements
@@ -69,7 +69,6 @@
       update_cache: yes
       name: 
          - nodejs
-         - npm
          - cargo
       state: latest
 
