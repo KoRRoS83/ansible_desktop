@@ -50,6 +50,13 @@
       group: korros
       mode: '0775'
 
+  - name: Install kickstart lsp requirements
+    package: 
+      name: 
+         - nodejs
+         - npm
+      state: latest
+
   - name: Git clone the neovim kickstart
     ansible.builtin.git:
       repo: 'https://github.com/nvim-lua/kickstart.nvim.git'
