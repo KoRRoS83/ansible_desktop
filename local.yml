@@ -50,11 +50,27 @@
       group: korros
       mode: '0775'
 
+####
+# Playbook info from https://kyle.pericak.com/nodejs-ansible.html
+####
+
+  - name: "Add nodejs apt key"
+    apt_key:
+      url: https://deb.nodesource.com/gpgkey/nodesource.gpg.key
+      state: present
+
+  - name: "Add nodejs 19.x ppa for apt repo"
+    apt_repository:
+      repo: deb https://deb.nodesource.com/node_19.x jammy main
+      update_cache: yes
+
   - name: Install kickstart lsp requirements
     package: 
+      update_cache: yes
       name: 
          - nodejs
          - npm
+         - cargo
       state: latest
 
   - name: Git clone the neovim kickstart
