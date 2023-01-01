@@ -38,13 +38,9 @@
 
   - name: Build neovim
     shell: "cd {{ tmp_build }}/neovim && make -j 20 CMAKE_BUILD_TYPE=RelWithDebInfo"
-    tags:
-      - neovim
 
   - name: Install neovim
     shell: "cd {{ tmp_build }}/neovim && make install"
-    tags:
-      - neovim
 
   - name: Create config directory for nvim
     ansible.builtin.file:
