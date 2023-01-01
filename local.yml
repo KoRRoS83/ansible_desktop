@@ -5,13 +5,14 @@
   vars:
     tmp_build: "/tmp/build"
     my_home: "/home/korros"
+    my_user: "korros"
 
   tasks:
   - name: Create config directory for nvim
     ansible.builtin.file:
       path: "{{ tmp_build }}"
       state: directory
-      mode: '0775'
+      mode: "0775"
 
   - name: Install build prerequisites
     package: 
@@ -46,9 +47,9 @@
     ansible.builtin.file:
       path: "{{ my_home }}/.config/nvim"
       state: directory
-      owner: korros
-      group: korros
-      mode: '0775'
+      owner: {{ my_user }}
+      group: {{ my_user }}
+      mode: "0775"
 
 ####
 # Playbook info from https://kyle.pericak.com/nodejs-ansible.html
@@ -70,9 +71,12 @@
       name: 
          - nodejs
          - cargo
+         - golang-go
+         - python3-pip
+         - python3-venv
       state: latest
 
-  - name: Git clone the neovim kickstart
+  - name: Clone the neovim kickstart repo
     ansible.builtin.git:
       repo: 'https://github.com/nvim-lua/kickstart.nvim.git'
       dest: "{{ tmp_build }}/kickstart.nvim"
@@ -81,6 +85,6 @@
     copy:
       src: "{{ tmp_build }}/kickstart.nvim/init.lua"
       dest: "{{ my_home }}/.config/nvim/init.lua"
-      owner: korros
-      group: korros
-      mode: '0775'
+      owner: "{{ my_user }}"
+      group: "{{ my_user }}"
+      mode: "0775"
