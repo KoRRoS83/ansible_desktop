@@ -47,8 +47,8 @@
     ansible.builtin.file:
       path: "{{ my_home }}/.config/nvim"
       state: directory
-      owner: {{ my_user }}
-      group: {{ my_user }}
+      owner: "{{ my_user }}"
+      group: "{{ my_user }}"
       mode: "0775"
 
 ####
