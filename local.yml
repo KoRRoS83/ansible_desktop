@@ -1,8 +1,11 @@
 ---
-- hosts: localhost
-  connection: local
-  become: true
+- name: Local playbook run for setting up Neovim
+  hosts: localhost
+  become: True
+
   vars:
+    ansible_conneciton: local
+    ansible_python_interpreter: "{{ ansible_playbook_python }}"
     tmp_build: "/tmp/build"
     my_home: "/home/korros"
     my_user: "korros"
@@ -35,7 +38,7 @@
     ansible.builtin.git:
       repo: 'https://github.com/neovim/neovim.git'
       dest: "{{ tmp_build }}/neovim"
-      version: nightly
+      version: stable
 
   - name: Build neovim
     shell: "cd {{ tmp_build }}/neovim && make -j 20 CMAKE_BUILD_TYPE=RelWithDebInfo"
@@ -74,6 +77,7 @@
          - golang-go
          - python3-pip
          - python3-venv
+         - ripgrep
       state: latest
 
   - name: Clone the neovim kickstart repo
